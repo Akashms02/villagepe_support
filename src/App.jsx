@@ -1,15 +1,6 @@
 import { useState, useTransition } from 'react'
 
-interface Ticket {
-  id: string
-  title: string
-  merchant: string
-  priority: 'High' | 'Medium' | 'Low'
-  status: 'Open' | 'In Progress' | 'Resolved'
-  time: string
-}
-
-const INITIAL_TICKETS: Ticket[] = [
+const INITIAL_TICKETS = [
   {
     id: "VP-9021",
     title: "Merchant payout pending for ID #VP-9021",
@@ -45,21 +36,21 @@ const TICKET_TEMPLATES = [
 ]
 
 export default function App() {
-  const [tickets, setTickets] = useState<Ticket[]>(INITIAL_TICKETS)
+  const [tickets, setTickets] = useState(INITIAL_TICKETS)
   const [search, setSearch] = useState('')
-  const [filterPriority, setFilterPriority] = useState<string>('All')
-  const [activeTicket, setActiveTicket] = useState<Ticket | null>(INITIAL_TICKETS[0])
+  const [filterPriority, setFilterPriority] = useState('All')
+  const [activeTicket, setActiveTicket] = useState(INITIAL_TICKETS[0])
   const [isPending, startTransition] = useTransition()
 
   // Simulate adding a ticket
   const simulateNewTicket = () => {
     const template = TICKET_TEMPLATES[Math.floor(Math.random() * TICKET_TEMPLATES.length)]
     const randomId = `VP-${Math.floor(1000 + Math.random() * 9000)}`
-    const newTicket: Ticket = {
+    const newTicket = {
       id: randomId,
       title: template.title,
       merchant: template.merchant,
-      priority: template.priority as 'High' | 'Medium' | 'Low',
+      priority: template.priority,
       status: 'Open',
       time: 'Just now'
     }
@@ -68,7 +59,7 @@ export default function App() {
   }
 
   // Handle priority filter with React 19 startTransition
-  const handlePriorityFilter = (priority: string) => {
+  const handlePriorityFilter = (priority) => {
     startTransition(() => {
       setFilterPriority(priority)
     })
